@@ -1,6 +1,5 @@
 ---
 import cv from '~/data/cv.json';
-import Particles from './Particles.astro';
 
 const [firstName, ...lastNameParts] = cv.profile.name.split(' ');
 const lastName = lastNameParts.join(' ');
@@ -43,12 +42,6 @@ const visibleSocial = cv.profile.social.filter((s) => !s.url.startsWith('TODO_')
   </span>
 
   <!-- MID: símbolos rotando -->
-  <span
-    aria-hidden="true"
-    data-depth="mid"
-    data-depth-rotate="20"
-    class="pointer-events-none absolute top-44 right-[12%] text-[var(--color-accent-2)] text-7xl md:text-9xl font-display font-light opacity-40"
-  >✳</span>
   <svg
     aria-hidden="true"
     data-depth="mid"
@@ -59,8 +52,6 @@ const visibleSocial = cv.profile.social.filter((s) => !s.url.startsWith('TODO_')
     <path d="M12 2v20M2 12h20" />
   </svg>
 
-  <!-- Campo de partículas luminosas con depth random -->
-  <Particles count={28} seed={11} />
 
   <!-- Top bar -->
   <div class="container-page relative z-10 flex items-start justify-between gap-8">

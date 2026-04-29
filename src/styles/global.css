@@ -40,6 +40,7 @@
   body {
     margin: 0;
     min-height: 100vh;
+    position: relative;
     font-feature-settings: "ss01", "cv11";
   }
 
@@ -185,23 +186,25 @@
     background-size: 80px 80px;
   }
 
-  /* Pulso de luz para [data-depth]:
-     --depth-fade controla la opacidad (apagado → encendido → apagado).
-     --depth-glow controla el resplandor (box-shadow/text-shadow).
-     GSAP las anima desde JS según la posición del elemento en el viewport. */
+  /* Pulso de luz potente para [data-depth]:
+     --depth-fade controla la opacidad.
+     --depth-glow controla el resplandor (box-shadow/text-shadow). */
   [data-depth] {
     opacity: var(--depth-fade, 1);
   }
+  /* Triple capa de glow para dots/circles — halo amplio + brillo medio + core */
   [data-depth].rounded-full,
   [data-depth][class*="rounded"] {
     box-shadow:
+      0 0 calc(var(--depth-glow, 0) * 140px) 0 currentColor,
       0 0 calc(var(--depth-glow, 0) * 60px) 0 currentColor,
-      0 0 calc(var(--depth-glow, 0) * 25px) 0 currentColor;
+      0 0 calc(var(--depth-glow, 0) * 18px) 4px currentColor;
   }
   [data-depth]:not(.rounded-full):not([class*="rounded"]) {
     text-shadow:
-      0 0 calc(var(--depth-glow, 0) * 40px) currentColor,
-      0 0 calc(var(--depth-glow, 0) * 15px) currentColor;
+      0 0 calc(var(--depth-glow, 0) * 60px) currentColor,
+      0 0 calc(var(--depth-glow, 0) * 25px) currentColor,
+      0 0 calc(var(--depth-glow, 0) * 8px) currentColor;
   }
 
 }

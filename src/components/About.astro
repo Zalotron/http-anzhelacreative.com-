@@ -1,7 +1,6 @@
 ---
 import cv from '~/data/cv.json';
 import SectionHeader from './SectionHeader.astro';
-import Particles from './Particles.astro';
 
 const areas = [
   'Identidad de marca',
@@ -28,21 +27,18 @@ const areas = [
     Diseño
   </span>
 
-  <!-- Depth mid: chevron + asterisco -->
-  <span
+  <!-- Depth mid: círculo SVG decorativo -->
+  <svg
     aria-hidden="true"
     data-depth="mid"
-    data-depth-rotate="15"
-    class="pointer-events-none absolute top-1/3 right-[8%] text-[var(--color-accent)]/50 text-5xl"
-  >→</span>
-  <span
-    aria-hidden="true"
-    data-depth="mid"
-    data-depth-rotate="-25"
-    class="pointer-events-none absolute bottom-1/4 right-[20%] text-[var(--color-ink-faint)] text-6xl font-display"
-  >✳</span>
+    data-depth-rotate="35"
+    class="pointer-events-none absolute top-1/3 right-[8%] w-16 h-16 text-[var(--color-accent)]/40"
+    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5"
+  >
+    <circle cx="12" cy="12" r="11" />
+    <circle cx="12" cy="12" r="6" />
+  </svg>
 
-  <Particles count={22} seed={23} />
   <SectionHeader
     number="02"
     label="Sobre mí"

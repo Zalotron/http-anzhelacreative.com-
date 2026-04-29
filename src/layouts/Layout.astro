@@ -1,6 +1,7 @@
 ---
 import '~/styles/global.css';
 import cv from '~/data/cv.json';
+import GlobalParticles from '~/components/GlobalParticles.astro';
 
 interface Props {
   title?: string;
@@ -50,6 +51,9 @@ const {
     </div>
 
     <slot />
+
+    <!-- Capa global de partículas — encima de todo el contenido -->
+    <GlobalParticles />
 
     <script>
       import { initAnimations } from '~/scripts/animations';

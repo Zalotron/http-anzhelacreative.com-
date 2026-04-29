@@ -1,0 +1,20 @@
+---
+import Particles from './Particles.astro';
+---
+
+<!--
+  Capa global de partículas: vive fuera de las secciones para que el
+  overflow-hidden de cada sección no las corte. Position absolute respecto
+  al body, abarca toda la altura del documento, z-index alto para pasar
+  por encima del contenido (pointer-events:none — no roba clicks).
+  data-depth-trigger marca este elemento como el trigger del paralax,
+  así el rango de movimiento se calcula sobre toda la página.
+-->
+<div
+  id="global-particles"
+  data-depth-trigger
+  class="pointer-events-none absolute inset-0 overflow-visible"
+  style="z-index: 60;"
+>
+  <Particles count={120} seed={31} />
+</div>

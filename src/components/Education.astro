@@ -2,7 +2,6 @@
 import cv from '~/data/cv.json';
 import { formatRange } from '~/lib/format';
 import SectionHeader from './SectionHeader.astro';
-import Particles from './Particles.astro';
 ---
 
 <section id="education" class="relative py-16 md:py-20 overflow-hidden">
@@ -18,20 +17,22 @@ import Particles from './Particles.astro';
     Saber
   </span>
 
-  <!-- Depth mid: símbolo decorativo -->
-  <span
+  <!-- Depth mid: cruz SVG decorativa -->
+  <svg
     aria-hidden="true"
     data-depth="mid"
     data-depth-rotate="20"
-    class="pointer-events-none absolute top-32 right-[10%] text-[var(--color-accent)]/40 text-7xl font-display"
-  >+</span>
+    class="pointer-events-none absolute top-32 right-[10%] w-14 h-14 text-[var(--color-accent)]/40"
+    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5"
+  >
+    <path d="M12 2v20M2 12h20" />
+  </svg>
 
   <!-- Depth mid: círculo decorativo -->
   <svg aria-hidden="true" data-depth="mid" data-depth-rotate="-30" class="pointer-events-none absolute bottom-1/4 left-[15%] w-14 h-14 text-[var(--color-accent-2)]/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5">
     <circle cx="12" cy="12" r="11" />
   </svg>
 
-  <Particles count={24} seed={67} />
   <SectionHeader
     number="05"
     label="Formación"

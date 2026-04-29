@@ -72,6 +72,8 @@ function initDepthLayers() {
 
   layers.forEach((el) => {
     const depth = el.dataset.depth as 'back' | 'mid' | 'front';
+    const triggerEl =
+      (el.closest('section, [data-depth-trigger]') as HTMLElement | null) ?? el;
 
     // Rangos EXTREMOS — cada elemento toma random
     // back: prácticamente inmóviles (lejanos)
@@ -107,9 +109,12 @@ function initDepthLayers() {
     el.style.setProperty('--depth-glow', '0');
     el.style.setProperty('--depth-fade', '0');
 
-    // Distancia ABSOLUTA en píxeles (basada en viewport, no en tamaño del elemento)
-    // Esto hace que un dot de 2px se mueva 1500px si su ySpeed es 1.5 — VOLANDO.
-    const yDistance = vh * ySpeed;
+    // La distancia se calcula sobre la altura del trigger (sección o capa global)
+    // multiplicada por el ySpeed. Eso mantiene el ratio "velocidad efectiva" = ySpeed
+    // independiente de cuán alto sea el trigger. Para particles globales con trigger
+    // = body, una particle con speed 6 se mueve 6× la altura del documento.
+    const triggerHeight = triggerEl.offsetHeight || vh;
+    const yDistance = Math.max(triggerHeight * ySpeed, vh * ySpeed);
 
     gsap.to(el, {
       y: -yDistance,
@@ -117,14 +122,15 @@ function initDepthLayers() {
       rotation: rot,
       ease: 'none',
       scrollTrigger: {
-        trigger: (el.closest('section, [data-depth-trigger]') as Element | null) ?? el,
+        trigger: triggerEl,
         start: 'top bottom',
         end: 'bottom top',
         scrub: true,
       },
     });
 
-    // Pulso de luz: apagado arriba/abajo, prende en el centro
+    // Pulso de luz: trigger SIEMPRE el elemento mismo (no el container global),
+    // así cada particle se prende cuando ELLA está en el centro del viewport.
     const pulseTl = gsap.timeline({
       scrollTrigger: {
         trigger: el,
@@ -136,7 +142,7 @@ function initDepthLayers() {
     pulseTl.fromTo(
       el,
       { '--depth-glow': 0, '--depth-fade': 0 },
-      { '--depth-glow': 1, '--depth-fade': 1, ease: 'sine.inOut', duration: 0.5 },
+      { '--depth-glow': 1.6, '--depth-fade': 1, ease: 'sine.inOut', duration: 0.5 },
     );
     pulseTl.to(el, {
       '--depth-glow': 0,
@@ -214,7 +220,8 @@ function splitAndScatter(el: HTMLElement) {
     letters = [];
     [...text].forEach((char) => {
       const span = document.createElement('span');
-      span.textContent = char === ' ' ? ' ' : char;
+      // Non-breaking space para que el espacio NO se colapse dentro de inline-block
+      span.textContent = char === ' ' ? ' ' : char;
       span.style.display = 'inline-block';
       span.style.willChange = 'transform, filter, opacity';
       span.setAttribute('aria-hidden', 'true');
@@ -474,7 +481,7 @@ function initHeroLetters() {
     const letters: HTMLSpanElement[] = [];
     [...text].forEach((char) => {
       const span = document.createElement('span');
-      span.textContent = char === ' ' ? ' ' : char;
+      span.textContent = char === ' ' ? ' ' : char;
       span.style.display = 'inline-block';
       span.style.transform = 'translateY(110%)';
       span.style.willChange = 'transform, filter, opacity';
@@ -482,6 +489,12 @@ function initHeroLetters() {
       el.appendChild(span);
       letters.push(span);
     });
+    // Marcar como splitted enseguida para que initIdleFloat e initLetterScatter
+    // (que corre antes en initAnimations) puedan reusar las letras.
+    el.dataset.lettersAlreadySplit = 'true';
+    if (!el.dataset.scatterLetters) {
+      el.dataset.scatterLetters = el.dataset.heroScatter ?? '0.7';
+    }
     gsap.to(letters, {
       y: 0,
       duration: 1.1,
@@ -489,11 +502,6 @@ function initHeroLetters() {
       stagger: 0.025,
       delay: 0.2,
       onComplete: () => {
-        // Marca como ya splitted y aplica el letter-scatter en scroll.
-        el.dataset.lettersAlreadySplit = 'true';
-        if (!el.dataset.scatterLetters) {
-          el.dataset.scatterLetters = el.dataset.heroScatter ?? '0.7';
-        }
         splitAndScatter(el);
       },
     });
@@ -594,6 +602,88 @@ function initScrollProgress() {
   });
 }
 
+// Idle float: distintos perfiles según el tipo de elemento.
+// - "particle": amplitud grande (las partículas decorativas vagan dramático)
+// - "text":     amplitud pequeña + frecuencia un toque más alta (sutil pero notable)
+// Usa Web Animations API con composite:'add' para sumar al transform de GSAP.
+function initIdleFloat() {
+  if (prefersReduced) return;
+
+  type Profile = 'particle' | 'title';
+  const targets = new Map<HTMLElement, Profile>();
+
+  const addTarget = (el: HTMLElement, profile: Profile) => {
+    if (!targets.has(el)) targets.set(el, profile);
+  };
+
+  // Decoraciones depth → PARTICLE (amplitud muy grande)
+  document
+    .querySelectorAll<HTMLElement>('[data-depth]')
+    .forEach((el) => addTarget(el, 'particle'));
+
+  // Letras de TÍTULOS splitted → TITLE (sutil + frecuencia alta)
+  // Solo aplica a h1/h2/h3 con letter-scatter, NO al texto largo (words/scatter).
+  document
+    .querySelectorAll<HTMLElement>(
+      '[data-scatter-letters][data-letters-already-split="true"]',
+    )
+    .forEach((parent) => {
+      Array.from(parent.children).forEach((child) => {
+        if ((child as HTMLElement).tagName === 'SPAN') {
+          addTarget(child as HTMLElement, 'title');
+        }
+      });
+    });
+
+  // data-idle manual → respeta perfil o cae en title
+  document.querySelectorAll<HTMLElement>('[data-idle]').forEach((el) => {
+    const p = (el.dataset.idleProfile as Profile) ?? 'title';
+    addTarget(el, p);
+  });
+
+  const configs: Record<Profile, { dx: number; dy: number; dr: number; durMin: number; durMax: number }> = {
+    // Particles: amplitud x4 — vagan dramático en todas direcciones.
+    particle: { dx: 320, dy: 260, dr: 32, durMin: 9000, durMax: 23000 },
+    // Títulos: amplitud apenas, frecuencia alta (dura 2.5–6s).
+    title: { dx: 3.5, dy: 2.8, dr: 0.8, durMin: 2500, durMax: 6000 },
+  };
+
+  targets.forEach((profile, el) => {
+    if (el.dataset.idleApplied === 'true') return;
+    el.dataset.idleApplied = 'true';
+
+    const range = parseFloat(el.dataset.idle ?? '1');
+    const cfg = configs[profile];
+
+    const dx = (Math.random() - 0.5) * cfg.dx * range;
+    const dy = (Math.random() - 0.5) * cfg.dy * range;
+    const dr = (Math.random() - 0.5) * cfg.dr * range;
+    const dur = cfg.durMin + Math.random() * (cfg.durMax - cfg.durMin);
+    const delay = -Math.random() * dur;
+
+    try {
+      el.animate(
+        [
+          { transform: 'translate(0px, 0px) rotate(0deg)' },
+          {
+            transform: `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px) rotate(${dr.toFixed(2)}deg)`,
+          },
+        ],
+        {
+          duration: dur,
+          delay,
+          iterations: Infinity,
+          direction: 'alternate',
+          easing: 'ease-in-out',
+          composite: 'add',
+        },
+      );
+    } catch {
+      // Sin soporte composite:'add' → silencioso
+    }
+  });
+}
+
 export function initAnimations() {
   initSmoothScroll();
   initReveals();
@@ -609,4 +699,6 @@ export function initAnimations() {
   initMarquee();
   initCursorGradient();
   initScrollProgress();
+  // Idle al final: todos los splits y selectores ya existen.
+  initIdleFloat();
 }
