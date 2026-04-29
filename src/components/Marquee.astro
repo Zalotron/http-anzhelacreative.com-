@@ -1,0 +1,38 @@
+---
+const words = [
+  'Identidad de marca',
+  'UX/UI',
+  'Tipografía',
+  'Sistemas de diseño',
+  'Motion graphics',
+  'Ilustración',
+  'Branding',
+  'Editorial',
+  'Retoque',
+];
+
+// Duplicamos el contenido para loop sin fisuras (animación va hasta -50%).
+const looped = [...words, ...words];
+---
+
+<section
+  aria-hidden="true"
+  class="relative border-y border-[var(--color-border)] py-5 md:py-7 overflow-hidden bg-[var(--color-bg)]"
+>
+  <div data-marquee="40" class="flex items-center whitespace-nowrap will-change-transform">
+    {
+      looped.map((word, i) => (
+        <span class="flex items-center shrink-0">
+          <span
+            class={`heading-display text-5xl md:text-7xl px-8 ${
+              i % 2 === 0 ? 'text-[var(--color-ink-faint)]' : 'text-[var(--color-accent)]'
+            }`}
+          >
+            {word}
+          </span>
+          <span class="text-[var(--color-ink-faint)] text-3xl md:text-5xl">·</span>
+        </span>
+      ))
+    }
+  </div>
+</section>

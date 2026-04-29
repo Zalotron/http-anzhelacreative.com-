@@ -1,0 +1,75 @@
+---
+import cv from '~/data/cv.json';
+import SectionHeader from './SectionHeader.astro';
+import Particles from './Particles.astro';
+---
+
+<section id="languages" class="relative py-16 md:py-20 overflow-hidden">
+  <!-- Depth back: carácter gigante outline + blur (fuera de foco, en profundidad) -->
+  <span
+    aria-hidden="true"
+    data-depth="back"
+    data-depth-blur="3"
+    data-depth-rotate="-4"
+    class="pointer-events-none select-none absolute -top-8 -left-12 heading-display text-[26vw] font-bold leading-none"
+    style="color: transparent; -webkit-text-stroke: 1px var(--color-ink-faint); opacity: 0.3;"
+  >
+    Я
+  </span>
+
+  <!-- Depth mid: numero gigante atravesando -->
+  <span
+    aria-hidden="true"
+    data-depth="mid"
+    data-depth-rotate="6"
+    class="pointer-events-none select-none absolute top-1/2 -right-4 heading-display text-[14vw] font-bold leading-none"
+    style="color: transparent; -webkit-text-stroke: 1px var(--color-border); opacity: 0.5;"
+  >
+    06
+  </span>
+
+  <Particles count={22} seed={79} />
+
+  <SectionHeader
+    number="06"
+    label="Idiomas"
+    title="Tres lenguas,<br/><span style='color:var(--color-accent)'>una</span> manera de comunicar."
+  />
+
+  <div class="container-page relative z-10 grid md:grid-cols-3 gap-6" data-reveal-stagger data-stagger-delay="0.1">
+    {
+      cv.languages.map((lang, i) => (
+        <div data-scatter={0.5 + i * 0.1}>
+        <article
+          data-tilt="3"
+          class="group relative p-6 md:p-10 border border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent)] transition-all duration-500 overflow-hidden"
+        >
+          <span class="font-mono text-xs text-[var(--color-ink-faint)]">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <h3
+            data-scatter-letters="0.8"
+            class="heading-display text-5xl md:text-6xl mt-4 mb-2 group-hover:text-[var(--color-accent)] transition-colors duration-500"
+          >
+            {lang.name}
+          </h3>
+          <p class="font-mono text-xs uppercase tracking-[0.2em] text-[var(--color-ink-dim)] mt-2">{lang.level}</p>
+
+          <div class="mt-8 flex gap-1.5">
+            {Array.from({ length: 5 }).map((_, idx) => (
+              <span
+                class={`flex-1 h-1 ${idx < lang.value ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-border)]'}`}
+              />
+            ))}
+          </div>
+
+          <div
+            aria-hidden="true"
+            class="absolute -bottom-12 -right-12 w-40 h-40 rounded-full bg-[var(--color-accent)]/0 group-hover:bg-[var(--color-accent)]/10 blur-2xl transition-all duration-700"
+          />
+        </article>
+        </div>
+      ))
+    }
+  </div>
+</section>

@@ -1,0 +1,34 @@
+---
+interface Props {
+  number: string;
+  label: string;
+  title: string;
+  subtitle?: string;
+}
+
+const { number, label, title, subtitle } = Astro.props;
+---
+
+<header class="container-page mb-10 md:mb-14 relative z-10" data-reveal>
+  <div data-scatter="0.6" class="accent-rule mb-4"></div>
+  <div class="flex items-baseline justify-between gap-6 mb-4">
+    <span data-scatter="0.4" class="label-mono">
+      <span class="text-[var(--color-accent)]">{number}</span> · {label}
+    </span>
+  </div>
+  <h2
+    data-scatter="0.25"
+    class="heading-display text-[clamp(2.25rem,6.5vw,5.5rem)] max-w-5xl"
+    set:html={title}
+  />
+  {
+    subtitle && (
+      <p
+        data-scatter-words="0.6"
+        class="font-display font-light text-lg md:text-xl text-[var(--color-ink-dim)] mt-4 max-w-2xl"
+      >
+        {subtitle}
+      </p>
+    )
+  }
+</header>

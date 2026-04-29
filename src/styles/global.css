@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0a0a;
+  --color-surface: #121212;
+  --color-elevated: #1a1a1a;
+  --color-border: #262626;
+  --color-ink: #f4f1ea;
+  --color-ink-dim: #8a8a85;
+  --color-ink-faint: #4a4a47;
+  --color-accent: #b83d5c;
+  --color-accent-dim: #862a44;
+  --color-accent-2: #5dcfc0;
+  --color-accent-2-dim: #3fa694;
+
+  --font-display: "Anybody", "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", "Helvetica Neue", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  /* Lenis smooth scroll */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: clip;
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 1400px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  .heading-display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+    font-variation-settings: "wdth" 100;
+  }
+
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-dim);
+  }
+
+  .accent-rule {
+    height: 1px;
+    background: var(--color-border);
+    position: relative;
+  }
+  .accent-rule::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3rem;
+    background: var(--color-accent);
+  }
+
+  /* Marquee hover effect on big titles */
+  .link-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .link-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: currentColor;
+    transform-origin: right;
+    transform: scaleX(0);
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+  .link-underline:hover::after {
+    transform-origin: left;
+    transform: scaleX(1);
+  }
+
+  /* Reveal helpers — JS toggles .is-revealed */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  [data-reveal].is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 1.2s var(--ease-out-expo),
+      transform 1.2s var(--ease-out-expo);
+  }
+
+  [data-reveal-stagger] > * {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  [data-reveal-stagger].is-revealed > * {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 1s var(--ease-out-expo),
+      transform 1s var(--ease-out-expo);
+  }
+
+  /* Grid background con paralax suave */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
+
+  /* Pulso de luz para [data-depth]:
+     --depth-fade controla la opacidad (apagado → encendido → apagado).
+     --depth-glow controla el resplandor (box-shadow/text-shadow).
+     GSAP las anima desde JS según la posición del elemento en el viewport. */
+  [data-depth] {
+    opacity: var(--depth-fade, 1);
+  }
+  [data-depth].rounded-full,
+  [data-depth][class*="rounded"] {
+    box-shadow:
+      0 0 calc(var(--depth-glow, 0) * 60px) 0 currentColor,
+      0 0 calc(var(--depth-glow, 0) * 25px) 0 currentColor;
+  }
+  [data-depth]:not(.rounded-full):not([class*="rounded"]) {
+    text-shadow:
+      0 0 calc(var(--depth-glow, 0) * 40px) currentColor,
+      0 0 calc(var(--depth-glow, 0) * 15px) currentColor;
+  }
+
+}

@@ -1,0 +1,55 @@
+---
+import cv from '~/data/cv.json';
+
+const sections = [
+  { id: 'experience', label: 'Experiencia' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'education', label: 'Formación' },
+  { id: 'languages', label: 'Idiomas' },
+  { id: 'contact', label: 'Contacto' },
+];
+---
+
+<nav
+  class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[rgba(10,10,10,0.6)] border-b border-[var(--color-border)]/50"
+>
+  <div class="container-page flex items-center justify-between h-16">
+    <a
+      href="#top"
+      class="font-display text-xl tracking-tight hover:text-[var(--color-accent)] transition-colors"
+    >
+      {cv.profile.shortName}<span class="text-[var(--color-accent)]">.</span>
+    </a>
+
+    <ul class="hidden md:flex items-center gap-8 label-mono">
+      {
+        sections.map((section) => (
+          <li>
+            <a
+              href={`#${section.id}`}
+              class="link-underline hover:text-[var(--color-ink)] transition-colors"
+            >
+              {section.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <a
+      href={`mailto:${cv.profile.email}`}
+      data-magnetic="0.25"
+      class="group relative inline-flex items-center gap-2 px-4 py-2 border border-[var(--color-accent)] text-[var(--color-accent)] label-mono overflow-hidden"
+    >
+      <span data-magnetic-inner class="relative z-10">Contratar</span>
+      <span
+        class="absolute inset-0 bg-[var(--color-accent)] -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+      ></span>
+      <span
+        class="absolute inset-0 flex items-center justify-center text-[var(--color-bg)] translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] label-mono"
+      >
+        Contratar →
+      </span>
+    </a>
+  </div>
+</nav>

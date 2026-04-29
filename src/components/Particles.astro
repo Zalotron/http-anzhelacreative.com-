@@ -1,0 +1,63 @@
+---
+// Partículas luminosas con depth aleatoria.
+// Cada partícula tiene posición, tamaño, color y blur pseudo-random
+// para que parezca un campo de luz heterogéneo. Velocidades random
+// las setea initDepthLayers en runtime.
+
+interface Props {
+  count?: number;
+  seed?: number;
+  intensity?: number;
+}
+
+const { count = 18, seed = 7, intensity = 1 } = Astro.props;
+
+const random = (n: number) => {
+  const x = Math.sin(seed * 9.1 + n * 17.3) * 10000;
+  return x - Math.floor(x);
+};
+
+const depths = ['back', 'mid', 'front'] as const;
+const colors = [
+  'var(--color-accent)',
+  'var(--color-accent-2)',
+  'var(--color-ink)',
+];
+
+const particles = Array.from({ length: count }).map((_, i) => {
+  const depth = depths[Math.floor(random(i * 3) * 3)];
+  const isFront = depth === 'front';
+  const isBack = depth === 'back';
+  // Tamaños variables: front tiene mayor probabilidad de tener algunas grandes
+  // (esas son las que "tapan" parte del contenido al pasar cerca).
+  const baseSize = 1 + random(i * 3 + 1) * 5;
+  const size =
+    isFront && random(i * 3 + 2) > 0.7
+      ? baseSize + random(i * 5) * 50 // partícula grande/blob ocasional
+      : baseSize;
+  const blur =
+    isFront && size > 10
+      ? 8 + random(i * 7) * 20
+      : isBack
+        ? 1 + random(i * 7) * 3
+        : random(i * 7) * 1.5;
+  const color = colors[Math.floor(random(i * 3 + 4) * colors.length)];
+  const top = 2 + random(i * 11) * 96;
+  const left = 2 + random(i * 13) * 96;
+  const opacity = (isBack ? 0.4 : 0.7) * (0.6 + random(i * 5) * 0.4) * intensity;
+  const z = isFront ? 30 : isBack ? 0 : 5;
+  return { depth, size, blur, color, top, left, opacity, z };
+});
+---
+
+{
+  particles.map((p) => (
+    <span
+      aria-hidden="true"
+      data-depth={p.depth}
+      data-depth-blur={p.blur > 0.3 ? p.blur.toFixed(1) : undefined}
+      class="pointer-events-none absolute rounded-full"
+      style={`top: ${p.top.toFixed(2)}%; left: ${p.left.toFixed(2)}%; width: ${p.size.toFixed(1)}px; height: ${p.size.toFixed(1)}px; background: ${p.color}; opacity: ${p.opacity.toFixed(2)}; color: ${p.color}; z-index: ${p.z};`}
+    />
+  ))
+}

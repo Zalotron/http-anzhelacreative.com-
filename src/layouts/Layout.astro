@@ -1,0 +1,64 @@
+---
+import '~/styles/global.css';
+import cv from '~/data/cv.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${cv.profile.name} — ${cv.profile.role}`,
+  description = cv.profile.bio.slice(0, 160),
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={cv.profile.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@75..150,100..900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+  </head>
+  <body class="bg-[var(--color-bg)] text-[var(--color-ink)]">
+    <!-- Scroll progress bar -->
+    <div
+      class="fixed top-0 left-0 right-0 h-[2px] z-[100] pointer-events-none"
+      aria-hidden="true"
+    >
+      <div
+        data-scroll-progress
+        class="h-full bg-[var(--color-accent)] origin-left"
+        style="transform: scaleX(0); will-change: transform;"
+      >
+      </div>
+    </div>
+
+    <slot />
+
+    <script>
+      import { initAnimations } from '~/scripts/animations';
+      const run = () => initAnimations();
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', run, { once: true });
+      } else {
+        run();
+      }
+    </script>
+  </body>
+</html>

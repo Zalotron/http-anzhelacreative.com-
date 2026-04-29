@@ -1,0 +1,118 @@
+---
+import cv from '~/data/cv.json';
+import { formatRange } from '~/lib/format';
+import SectionHeader from './SectionHeader.astro';
+import Particles from './Particles.astro';
+---
+
+<section id="education" class="relative py-16 md:py-20 overflow-hidden">
+  <!-- Depth back: palabra outline gigante con blur -->
+  <span
+    aria-hidden="true"
+    data-depth="back"
+    data-depth-blur="3"
+    data-depth-rotate="-2"
+    class="pointer-events-none select-none absolute top-1/4 -left-8 heading-display text-[20vw] font-bold leading-none"
+    style="color: transparent; -webkit-text-stroke: 1px var(--color-ink-faint); opacity: 0.25;"
+  >
+    Saber
+  </span>
+
+  <!-- Depth mid: símbolo decorativo -->
+  <span
+    aria-hidden="true"
+    data-depth="mid"
+    data-depth-rotate="20"
+    class="pointer-events-none absolute top-32 right-[10%] text-[var(--color-accent)]/40 text-7xl font-display"
+  >+</span>
+
+  <!-- Depth mid: círculo decorativo -->
+  <svg aria-hidden="true" data-depth="mid" data-depth-rotate="-30" class="pointer-events-none absolute bottom-1/4 left-[15%] w-14 h-14 text-[var(--color-accent-2)]/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5">
+    <circle cx="12" cy="12" r="11" />
+  </svg>
+
+  <Particles count={24} seed={67} />
+  <SectionHeader
+    number="05"
+    label="Formación"
+    title="Aprender<br/>como <span style='color:var(--color-accent)'>práctica</span>."
+  />
+
+  <div class="container-page relative z-10 space-y-8">
+    {
+      cv.education.map((item, i) => (
+        <article
+          data-scatter={(0.3 + i * 0.05).toFixed(2)}
+          class="grid md:grid-cols-12 gap-5 md:gap-10 pb-8 border-b border-[var(--color-border)]"
+        >
+          <div class="md:col-span-3">
+            <p data-scatter="0.55" class="label-mono">{formatRange(item.start, item.end)}</p>
+          </div>
+          <div class="md:col-span-9">
+            <h3
+              data-scatter-letters="0.6"
+              class="font-display text-3xl md:text-4xl mb-2"
+            >
+              {item.institution}
+            </h3>
+            <p
+              data-scatter-words="0.5"
+              class="font-display font-medium text-xl text-[var(--color-accent)] mb-4"
+            >
+              {item.degree}
+            </p>
+            <p
+              data-scatter-words="0.55"
+              class="text-[var(--color-ink-dim)] max-w-3xl leading-relaxed"
+            >
+              {item.description}
+            </p>
+          </div>
+        </article>
+      ))
+    }
+
+    {
+      cv.volunteering.length > 0 && (
+        <>
+          <div class="pt-8">
+            <p data-scatter="0.5" class="label-mono mb-5 text-[var(--color-accent-2)]">— Trabajo voluntario</p>
+          </div>
+          {cv.volunteering.map((item, i) => (
+            <article
+              data-scatter={(0.35 + i * 0.05).toFixed(2)}
+              class="grid md:grid-cols-12 gap-5 md:gap-10 pb-8 border-b border-[var(--color-border)]"
+            >
+              <div class="md:col-span-3">
+                <p data-scatter="0.5" class="label-mono">{formatRange(item.start, item.end)}</p>
+                {item.location && (
+                  <p data-scatter="0.55" class="label-mono text-[var(--color-ink-faint)] mt-1">{item.location}</p>
+                )}
+              </div>
+              <div class="md:col-span-9">
+                <h3
+                  data-scatter-letters="0.55"
+                  class="font-display text-2xl md:text-3xl mb-2"
+                >
+                  {item.organization}
+                </h3>
+                <p
+                  data-scatter-words="0.5"
+                  class="font-display font-medium text-lg text-[var(--color-accent)] mb-4"
+                >
+                  {item.role}
+                </p>
+                <p
+                  data-scatter-words="0.55"
+                  class="text-[var(--color-ink-dim)] max-w-3xl leading-relaxed"
+                >
+                  {item.description}
+                </p>
+              </div>
+            </article>
+          ))}
+        </>
+      )
+    }
+  </div>
+</section>

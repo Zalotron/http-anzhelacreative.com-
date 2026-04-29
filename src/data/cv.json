@@ -1,0 +1,141 @@
+{
+  "profile": {
+    "name": "Anzhela Vostretsova",
+    "shortName": "Anzhela",
+    "role": "Diseñadora Gráfica · UX/UI",
+    "tagline": "Diseño identidades, interfaces y piezas que comunican con intención.",
+    "location": "Caballito, Capital Federal, Argentina",
+    "email": "anzhvostretsova@gmail.com",
+    "photo": "/assets/angela.jpg",
+    "bio": "Diseñadora especializada en diseño gráfico, identidad de marca y UX/UI. Con más de 3 años de experiencia personal y profesional en el desarrollo de piezas gráficas e interfaces funcionales y coherentes. Actualmente curso la Licenciatura en Diseño en Comunicación Visual en la UNLP, integrando formación académica con práctica real.",
+    "social": [
+      {
+        "label": "LinkedIn",
+        "handle": "in/angela-vostretsova",
+        "url": "https://www.linkedin.com/in/angela-vostretsova-2b749323b/"
+      },
+      {
+        "label": "Behance",
+        "handle": "anzhvostretsova",
+        "url": "https://www.behance.net/anzhvostretsova"
+      },
+      {
+        "label": "Email",
+        "handle": "anzhvostretsova@gmail.com",
+        "url": "mailto:anzhvostretsova@gmail.com"
+      }
+    ]
+  },
+  "experience": [
+    {
+      "company": "Ocho Creative Studio",
+      "location": "Buenos Aires",
+      "role": "Diseñadora gráfica",
+      "start": "2025-09",
+      "end": null,
+      "context": "Agencia de Marketing Digital.",
+      "highlights": [
+        "Diseño y desarrollo de piezas gráficas para diferentes clientes de la agencia, adaptando cada propuesta a sus identidades de marca y objetivos de comunicación.",
+        "Diseño de pautas publicitarias.",
+        "Edición y retoque de imágenes.",
+        "Edición de video y motion graphics para contenido digital.",
+        "Uso de IA generativa como parte del proceso creativo."
+      ]
+    },
+    {
+      "company": "Araí Cloud",
+      "location": "Buenos Aires",
+      "role": "Diseñadora visual y UX/UI",
+      "start": "2025-01",
+      "end": "2025-09",
+      "context": "Startup tecnológica especializada en soluciones cloud y comunicación digital.",
+      "highlights": [
+        "Diseñé la identidad de marca y logotipo.",
+        "Diseñé la UI de la landing page de la empresa.",
+        "Desarrollé el sistema de diseño personalizado para optimizar la consistencia visual.",
+        "Creé assets gráficos y materiales de comunicación.",
+        "Realicé ilustraciones personalizadas para la empresa (mascota)."
+      ]
+    },
+    {
+      "company": "Lignina denim",
+      "location": "La Plata",
+      "role": "Diseñadora gráfica",
+      "start": "2023-02",
+      "end": "2024-02",
+      "context": "Empresa argentina de indumentaria femenina. Responsable de la creación de piezas digitales que refuerzan la identidad de la marca en entornos web y redes sociales.",
+      "highlights": [
+        "Diseñé piezas gráficas para redes sociales, contribuyendo al aumento del engagement.",
+        "Colaboré en el diseño y mantenimiento de la página web.",
+        "Implementé la identidad visual en diferentes soportes visuales.",
+        "Edición y retoque de imágenes."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Universidad Nacional de La Plata",
+      "degree": "Licenciatura en Diseño en Comunicación Visual",
+      "start": "2024-04",
+      "end": null,
+      "description": "Carrera orientada a la formación de profesionales en la creación, planificación y gestión de mensajes visuales en distintos medios y soportes. Combina diseño, comunicación, teoría crítica y herramientas técnicas para abordar proyectos visuales con una mirada estratégica, creativa y socialmente comprometida."
+    }
+  ],
+  "volunteering": [
+    {
+      "organization": "Cátedra de Tipografía, FDA UNLP",
+      "location": "La Plata",
+      "role": "Ayudante de cátedra",
+      "start": "2025-04",
+      "end": null,
+      "description": "Acompaño a estudiantes durante el proceso de sus trabajos prácticos: asistencia y guía en clases y correcciones, resolución de dudas y participación en la evaluación de trabajos prácticos finales."
+    },
+    {
+      "organization": "UNLP Esport",
+      "location": "La Plata",
+      "role": "Diseñadora gráfica",
+      "start": "2025-03",
+      "end": "2025-06",
+      "description": "Equipo interdisciplinario de desarrollo de juegos electrónicos fundado en la UNLP. Colaboré en el área de diseño gráfico y comunicación visual."
+    }
+  ],
+  "skills": {
+    "hard": [
+      { "name": "Adobe Illustrator", "level": "Intermedio / Avanzado", "value": 4 },
+      { "name": "Adobe Photoshop", "level": "Intermedio / Avanzado", "value": 4 },
+      { "name": "Figma", "level": "Intermedio", "value": 3 },
+      { "name": "Adobe After Effects", "level": "Básico", "value": 2 },
+      { "name": "Adobe InDesign", "level": "Básico", "value": 2 }
+    ],
+    "soft": [
+      "Comunicación visual",
+      "Trabajo en equipo interdisciplinario",
+      "Empatía con el usuario",
+      "Resolución de problemas",
+      "Pensamiento crítico"
+    ]
+  },
+  "certifications": [
+    {
+      "name": "Design Thinking",
+      "issuer": "Universidad Blas Pascal",
+      "url": null
+    },
+    {
+      "name": "Design System",
+      "issuer": "CoderHouse",
+      "url": null
+    },
+    {
+      "name": "Diseño UX/UI",
+      "issuer": "CoderHouse",
+      "url": null
+    }
+  ],
+  "languages": [
+    { "name": "Ruso", "level": "Nativo", "value": 5 },
+    { "name": "Español", "level": "Bilingüe", "value": 5 },
+    { "name": "Inglés", "level": "B1", "value": 3 }
+  ],
+  "projects": []
+}

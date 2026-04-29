@@ -1,0 +1,118 @@
+---
+import cv from '~/data/cv.json';
+import SectionHeader from './SectionHeader.astro';
+import Particles from './Particles.astro';
+---
+
+<section id="skills" class="relative py-16 md:py-20 overflow-hidden">
+  <!-- Depth back: número gigante outline + blur -->
+  <span
+    aria-hidden="true"
+    data-depth="back"
+    data-depth-blur="2"
+    data-depth-rotate="3"
+    class="pointer-events-none select-none absolute -top-12 -right-12 heading-display text-[28vw] font-bold leading-none"
+    style="color: transparent; -webkit-text-stroke: 1px var(--color-ink-faint); opacity: 0.25;"
+  >
+    04
+  </span>
+
+  <!-- Depth mid: línea SVG vertical -->
+  <svg aria-hidden="true" data-depth="mid" class="pointer-events-none absolute top-1/4 left-[8%] h-48 w-px text-[var(--color-ink-faint)]" viewBox="0 0 1 100" preserveAspectRatio="none">
+    <line x1="0.5" y1="0" x2="0.5" y2="100" stroke="currentColor" stroke-width="1" stroke-dasharray="2 4" />
+  </svg>
+
+  <!-- Depth mid: círculo SVG -->
+  <svg aria-hidden="true" data-depth="mid" data-depth-rotate="40" class="pointer-events-none absolute bottom-1/4 right-[15%] w-16 h-16 text-[var(--color-accent-2)]/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.5">
+    <circle cx="12" cy="12" r="11" />
+    <circle cx="12" cy="12" r="6" />
+  </svg>
+
+  <Particles count={26} seed={53} />
+  <SectionHeader
+    number="04"
+    label="Skills"
+    title="Herramientas<br/>y <span style='color:var(--color-accent)'>capacidades</span>."
+  />
+
+  <div class="container-page relative z-10 grid md:grid-cols-12 gap-10">
+    <!-- Hard skills -->
+    <div class="md:col-span-7">
+      <p data-scatter="0.4" class="label-mono mb-5">Hard skills</p>
+      <ul class="space-y-4">
+        {
+          cv.skills.hard.map((skill, i) => (
+            <li data-scatter={(0.45 + (i % 3) * 0.1).toFixed(2)} class="group">
+              <div class="flex items-baseline justify-between gap-4 mb-2">
+                <span data-scatter-letters="0.5" class="font-display text-2xl md:text-3xl">{skill.name}</span>
+                <span class="label-mono">{skill.level}</span>
+              </div>
+              <div class="h-px bg-[var(--color-border)] relative overflow-hidden">
+                <div
+                  class="skill-bar absolute inset-y-0 left-0 bg-[var(--color-accent)] origin-left"
+                  style={`width: ${(skill.value / 5) * 100}%; transform: scaleX(0); transition: transform 1.4s cubic-bezier(0.16,1,0.3,1);`}
+                  data-skill-value={skill.value}
+                />
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <!-- Soft skills -->
+    <div class="md:col-span-5">
+      <p data-scatter="0.4" class="label-mono mb-5">Soft skills</p>
+      <ul class="flex flex-wrap gap-3">
+        {
+          cv.skills.soft.map((skill, i) => (
+            <li
+              data-scatter={(0.5 + (i % 4) * 0.15).toFixed(2)}
+              class="px-5 py-3 border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors duration-300"
+            >
+              {skill}
+            </li>
+          ))
+        }
+      </ul>
+
+      {
+        cv.certifications.length > 0 && (
+          <div class="mt-10">
+            <p data-scatter="0.4" class="label-mono mb-4">Certificaciones</p>
+            <ul class="space-y-3">
+              {cv.certifications.map((cert, i) => (
+                <li
+                  data-scatter={(0.45 + i * 0.1).toFixed(2)}
+                  class="flex items-baseline gap-3 pb-3 border-b border-[var(--color-border)]"
+                >
+                  <span class="text-[var(--color-accent)] font-mono text-xs">+</span>
+                  <div>
+                    <p>{cert.name}</p>
+                    <p class="label-mono">{cert.issuer}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  // Animar barras de skills cuando entran al viewport
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).style.transform = 'scaleX(1)';
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.4 }
+  );
+  document.querySelectorAll('.skill-bar').forEach((el) => observer.observe(el));
+</script>

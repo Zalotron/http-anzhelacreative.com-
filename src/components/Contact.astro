@@ -1,0 +1,113 @@
+---
+import cv from '~/data/cv.json';
+import Particles from './Particles.astro';
+---
+
+<section
+  id="contact"
+  class="relative py-20 md:py-28 border-t border-[var(--color-border)] overflow-hidden"
+>
+  <div
+    aria-hidden="true"
+    data-parallax="0.4"
+    class="absolute inset-0 bg-grid opacity-30 pointer-events-none"
+  >
+  </div>
+  <div
+    aria-hidden="true"
+    data-parallax="0.6"
+    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60rem] h-[60rem] rounded-full bg-[var(--color-accent)]/5 blur-3xl pointer-events-none"
+  >
+  </div>
+
+  <!-- Depth back: palabra "Hola" outline gigante con blur -->
+  <span
+    aria-hidden="true"
+    data-depth="back"
+    data-depth-blur="4"
+    data-depth-rotate="2"
+    class="pointer-events-none select-none absolute top-1/4 -left-8 heading-display text-[24vw] font-bold leading-none"
+    style="color: transparent; -webkit-text-stroke: 1px var(--color-ink-faint); opacity: 0.25;"
+  >
+    Hola
+  </span>
+
+  <!-- Depth mid: símbolos -->
+  <span aria-hidden="true" data-depth="mid" data-depth-rotate="35" class="pointer-events-none absolute top-1/3 right-[10%] text-[var(--color-accent-2)]/40 text-7xl font-display font-light">✳</span>
+  <span aria-hidden="true" data-depth="mid" data-depth-rotate="-20" class="pointer-events-none absolute bottom-1/4 left-[12%] text-[var(--color-accent)]/40 text-6xl font-display font-light">+</span>
+
+  <Particles count={36} seed={91} />
+
+  <div class="container-page relative z-10">
+    <div class="text-center max-w-5xl mx-auto">
+      <p data-scatter="0.4" class="label-mono mb-4">
+        <span class="text-[var(--color-accent)]">07</span> · Contacto
+      </p>
+      <h2 data-scatter="0.3" class="heading-display text-[clamp(2.5rem,9vw,8rem)] mb-8">
+        ¿Trabajamos<br />juntos<span class="text-[var(--color-accent)]">?</span>
+      </h2>
+
+      <a
+        href={`mailto:${cv.profile.email}`}
+        data-magnetic="0.2"
+        data-scatter="0.5"
+        class="inline-flex items-center gap-4 group"
+      >
+        <span
+          data-magnetic-inner
+          class="font-display font-medium text-2xl md:text-4xl text-[var(--color-accent)] link-underline"
+        >
+          {cv.profile.email}
+        </span>
+      </a>
+
+      <div data-scatter="0.55" class="mt-8">
+        <a
+          href="/cv.pdf"
+          download
+          class="inline-flex items-center gap-3 label-mono text-[var(--color-ink-dim)] hover:text-[var(--color-accent-2)] transition-colors"
+        >
+          <span class="w-8 h-px bg-current"></span>
+          Descargar CV (PDF)
+          <span class="inline-block transition-transform group-hover:translate-y-0.5">↓</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="mt-20 grid md:grid-cols-3 gap-6 pt-8 border-t border-[var(--color-border)]">
+      {
+        cv.profile.social.map((link, i) => {
+          const isPlaceholder = link.url.startsWith('TODO_');
+          return (
+            <a
+              href={isPlaceholder ? '#' : link.url}
+              target={isPlaceholder ? undefined : '_blank'}
+              rel="noopener noreferrer"
+              data-scatter={(0.5 + i * 0.1).toFixed(2)}
+              class="group flex items-baseline justify-between border-b border-[var(--color-border)] pb-4 hover:border-[var(--color-accent)] transition-colors"
+              aria-disabled={isPlaceholder}
+            >
+              <span class="label-mono group-hover:text-[var(--color-accent)] transition-colors">
+                {link.label}
+              </span>
+              <span class="font-display text-lg group-hover:text-[var(--color-accent)] transition-colors">
+                {isPlaceholder ? '— pendiente —' : link.handle}
+                <span class="inline-block ml-2 transition-transform group-hover:translate-x-1">
+                  ↗
+                </span>
+              </span>
+            </a>
+          );
+        })
+      }
+    </div>
+
+    <footer
+      data-scatter="0.4"
+      class="mt-14 flex flex-wrap items-center justify-between gap-4 label-mono text-[var(--color-ink-faint)]"
+    >
+      <span>{cv.profile.name} © {new Date().getFullYear()}</span>
+      <span>Diseñado con intención · Animado con GSAP</span>
+    </footer>
+  </div>
+</section>
