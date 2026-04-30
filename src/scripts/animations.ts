@@ -5,6 +5,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Detecta mobile: en pantallas chicas el scatter scroll-driven (500+ ScrollTriggers)
+// hace que se trabe. Lo desactivamos pero mantenemos el idle, el split de letras
+// (para legibilidad) y todo el resto del sistema visual.
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
 function initSmoothScroll() {
   if (prefersReduced) return;
@@ -157,6 +161,7 @@ function initDepthLayers() {
 // puedan escapar visualmente. Safe zone 30%, entrada/salida 35% cada una.
 function initScatter() {
   if (prefersReduced) return;
+  if (isMobile) return; // mobile: skip por performance
   const els = document.querySelectorAll<HTMLElement>('[data-scatter]');
   els.forEach((el) => {
     const intensity = parseFloat(el.dataset.scatter ?? '1');
@@ -230,6 +235,9 @@ function splitAndScatter(el: HTMLElement) {
     });
     el.dataset.lettersAlreadySplit = 'true';
   }
+
+  // Mobile: dejar splitted (para idle) pero saltar el scatter timeline.
+  if (isMobile) return;
 
   const intensity = parseFloat(
     el.dataset.scatterLetters ?? el.dataset.heroScatter ?? '1',
@@ -346,6 +354,9 @@ function initWordScatter() {
       el.appendChild(span);
       wordSpans.push(span);
     });
+
+    // Mobile: split listo, pero saltamos el scatter timeline para no trabar.
+    if (isMobile) return;
 
     wordSpans.forEach((word) => {
       const fwdIn = Math.random() > 0.5;
@@ -590,6 +601,34 @@ function initMarquee() {
   });
 }
 
+// Reveal liviano para mobile: 1 IntersectionObserver global + transition CSS.
+// Cada bloque arranca blurreado y oscuro, se aclara cuando entra al viewport.
+// Mucho más liviano que ScrollTrigger + scatter por elemento.
+function initMobileReveal() {
+  if (!isMobile || prefersReduced) return;
+
+  const els = document.querySelectorAll<HTMLElement>(
+    '[data-scatter], [data-scatter-letters], [data-scatter-words]',
+  );
+
+  els.forEach((el) => el.classList.add('mobile-veil'));
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-unveiled');
+        } else {
+          entry.target.classList.remove('is-unveiled');
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: '0px 0px -5% 0px' },
+  );
+
+  els.forEach((el) => io.observe(el));
+}
+
 function initScrollProgress() {
   const bar = document.querySelector<HTMLElement>('[data-scroll-progress]');
   if (!bar) return;
@@ -699,6 +738,7 @@ export function initAnimations() {
   initMarquee();
   initCursorGradient();
   initScrollProgress();
+  initMobileReveal();
   // Idle al final: todos los splits y selectores ya existen.
   initIdleFloat();
 }
