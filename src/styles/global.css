@@ -42,6 +42,10 @@
     min-height: 100vh;
     position: relative;
     font-feature-settings: "ss01", "cv11";
+    /* Contiene el overflow horizontal (partículas absolutas que se salen por
+       los bordes) sin volver al body un scroll container: overflow-x:clip con
+       overflow-y implícito en visible NO recorta el alto ni scrollea. */
+    overflow-x: clip;
   }
 
   ::selection {

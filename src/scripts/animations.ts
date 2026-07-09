@@ -99,9 +99,14 @@ function initDepthLayers() {
     const ySpeed = el.dataset.depthSpeed
       ? parseFloat(el.dataset.depthSpeed)
       : yRange.min + Math.random() * (yRange.max - yRange.min);
-    const xDrift = el.dataset.depthDrift
-      ? parseFloat(el.dataset.depthDrift)
-      : xRange.min + Math.random() * (xRange.max - xRange.min);
+    // Mobile: sin drift horizontal. El movimiento en X ensancha el documento
+    // (y el layout viewport), lo que empuja el nav fixed y su botón fuera de
+    // pantalla + genera scroll horizontal. En mobile solo dejamos el eje Y.
+    const xDrift = isMobile
+      ? 0
+      : el.dataset.depthDrift
+        ? parseFloat(el.dataset.depthDrift)
+        : xRange.min + Math.random() * (xRange.max - xRange.min);
 
     const blurPx = el.dataset.depthBlur ? parseFloat(el.dataset.depthBlur) : 0;
     const rot = parseFloat(el.dataset.depthRotate ?? '0');
@@ -694,7 +699,11 @@ function initIdleFloat() {
     const range = parseFloat(el.dataset.idle ?? '1');
     const cfg = configs[profile];
 
-    const dx = (Math.random() - 0.5) * cfg.dx * range;
+    // Mobile: las partículas no vagan en X (mismo motivo que el drift del depth:
+    // evita ensanchar el documento y romper el nav fixed). Los títulos (dx ~3.5px)
+    // no molestan, así que solo cancelamos el X de las particles.
+    const dx =
+      isMobile && profile === 'particle' ? 0 : (Math.random() - 0.5) * cfg.dx * range;
     const dy = (Math.random() - 0.5) * cfg.dy * range;
     const dr = (Math.random() - 0.5) * cfg.dr * range;
     const dur = cfg.durMin + Math.random() * (cfg.durMax - cfg.durMin);
